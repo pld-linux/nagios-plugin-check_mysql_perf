@@ -2,7 +2,7 @@
 Summary:	Nagios plugin: monitor various performance-related characteristics of a MySQL db
 Name:		nagios-plugin-%{plugin}
 Version:	1.3.2.3
-Release:	2
+Release:	3
 License:	GPL v2+
 Group:		Networking
 Source0:	http://www.consol.com/fileadmin/opensource/Nagios/%{plugin}-%{version}.tar.gz
@@ -11,6 +11,7 @@ Patch0:		nagios-plugin-check_mysql_perf-np.patch
 URL:		http://www.consol.com/opensource/nagios/check-mysql-perf
 BuildRequires:	mysql-devel
 BuildRequires:	nagios-plugins-devel
+BuildRequires:	sed >= 4.0
 Requires:	nagios-core
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -24,6 +25,9 @@ characteristics of a MySQL database.
 %prep
 %setup -q -n %{plugin}-%{version}
 %patch0 -p1
+%if "%{_lib}" != "lib"
+sed -i -e 's,(OFFICIALPLUGINS)/lib,(OFFICIALPLUGINS)/%{_lib},g' plugins/Makefile.am
+%endif
 
 # see plugin --help (-m option) for list of these
 cat > nagios.cfg <<'EOF'
