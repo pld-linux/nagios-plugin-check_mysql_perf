@@ -1,20 +1,17 @@
-# TODO
-# - use nagios-plugins-devel or sth
 %define		plugin	check_mysql_perf
 Summary:	Nagios plugin: monitor various performance-related characteristics of a MySQL db
 Name:		nagios-plugin-%{plugin}
 Version:	1.3.2.3
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Networking
 Source0:	http://www.consol.com/fileadmin/opensource/Nagios/%{plugin}-%{version}.tar.gz
 # Source0-md5:	7f6476a15ecb48e2aaacf103d829f104
-Source1:	http://dl.sourceforge.net/nagiosplug/nagios-plugins-1.4.13.tar.gz
-# Source1-md5:	be6cc7699fff3ee29d1fd4d562377386
+Patch0:		nagios-plugin-check_mysql_perf-np.patch
 URL:		http://www.consol.com/opensource/nagios/check-mysql-perf
 BuildRequires:	mysql-devel
+BuildRequires:	nagios-plugins-devel
 Requires:	nagios-core
-Conflicts:	nagios-common < 2.9-2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/nagios/plugins
@@ -25,8 +22,8 @@ Nagios plugin which allows you to monitor various performance-related
 characteristics of a MySQL database.
 
 %prep
-%setup -q -n %{plugin}-%{version} -a1
-mv nagios-plugins-* nagios-plugins
+%setup -q -n %{plugin}-%{version}
+%patch0 -p1
 
 # see plugin --help (-m option) for list of these
 cat > nagios.cfg <<'EOF'
@@ -97,11 +94,6 @@ define command {
 EOF
 
 %build
-cd nagios-plugins
-%configure \
-	--disable-perl-modules
-%{__make}
-cd ..
 %{__libtoolize}
 %{__aclocal} -I m4
 %{__autoconf}
@@ -109,7 +101,7 @@ cd ..
 %configure \
 	--with-nagios-user=nagios \
 	--with-nagios-group=nagios \
-	--with-officialplugins=$(pwd)/nagios-plugins
+	--with-officialplugins=%{_prefix}
 %{__make}
 
 %install
