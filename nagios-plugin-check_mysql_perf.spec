@@ -1,5 +1,6 @@
 %define		plugin	check_mysql_perf
-Summary:	Nagios plugin: monitor various performance-related characteristics of a MySQL db
+Summary:	Nagios plugin: monitor various performance-related characteristics of a MySQL DB
+Summary(pl.UTF-8):	Wtyczka Nagiosa monitorująca parametry wydajnościowe bazy danych MySQL
 Name:		nagios-plugin-%{plugin}
 Version:	1.3.2.3
 Release:	3
@@ -21,6 +22,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 Nagios plugin which allows you to monitor various performance-related
 characteristics of a MySQL database.
+
+%description -l pl.UTF-8
+Wtyczka Nagiosa pozwalająca na monitorowanie różnych parametrów bazy
+danych MySQL związanych z wydajnością.
 
 %prep
 %setup -q -n %{plugin}-%{version}
